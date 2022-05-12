@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\AuthenticationController;
+use App\Http\Controllers\API\UsersController;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/user', [\App\Http\Controllers\API\AuthenticationController::class, 'login']);
+Route::post('/user', [AuthenticationController::class, 'login']);
 
-Route::group(['middleware' => 'auth:api'], function (\Illuminate\Routing\Router $router) {
-  Route::get('/user', [\App\Http\Controllers\API\AuthenticationController::class, 'me']);
+Route::group(['middleware' => 'auth:api'], function (Router $router) {
+  Route::get('/user', [AuthenticationController::class, 'me']);
+
+  Route::group(['prefix' => '/users'], function () {
+    Route::get('/', [UsersController::class, 'index']);
+    Route::post('/', [UsersController::class, 'create']);
+    Route::get('/{user}', [UsersController::class, 'get']);
+    Route::put('/{user}', [UsersController::class, 'update']);
+    Route::delete('/{user}', [UsersController::class, 'delete']);
+  });
 });
 
 
