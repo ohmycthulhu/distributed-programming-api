@@ -23,7 +23,7 @@ Path | Method | Payload | Description
 /projects | GET | {keyword?, userId?} | To search projects
 /projects | POST | {name, description, isPrivate} | To create project
 /projects/:id | GET | - | To get information about project
-/projects/:id | DELETE | - | To delete users
+/projects/:id | DELETE | - | To delete a project
 /projects/:id | PUT | {name, description, isPrivate} | To update project
 
 
