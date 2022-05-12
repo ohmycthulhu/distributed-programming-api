@@ -24,6 +24,7 @@ class AuthenticationController extends BaseController
     }
 
     public function me() {
-      return $this->returnSuccess(['user' => auth()->user()]);
+      $user = auth()->user()->with('projects')->first();
+      return $this->returnSuccess(compact('user'));
     }
 }

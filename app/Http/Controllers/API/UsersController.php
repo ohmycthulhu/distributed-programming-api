@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Users\CreateUserRequest;
 use App\Http\Requests\API\Users\UpdateUserRequest;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -63,4 +64,12 @@ class UsersController extends BaseController
 
       return $this->returnSuccess(['users' => $this->user::query()->paginate(10)]);
     }
+
+    public function projects(User $user) {
+      if (!Gate::check('manage-users')) {
+        return $this->returnError("You are not allowed.", 403);
+      }
+
+      return $this->returnSuccess(['projects' => $user->projects()]);
+  }
 }

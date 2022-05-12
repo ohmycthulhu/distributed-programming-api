@@ -47,6 +47,10 @@ class User extends Authenticatable implements JWTSubject
     return $this->access_level == 'ADMIN';
   }
 
+  public function projects() {
+    return $this->hasMany(Project::class);
+  }
+
   /**
    * Get the identifier that will be stored in the subject claim of the JWT.
    *
