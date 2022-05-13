@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Projects\AddTagRequest;
 use App\Http\Requests\API\Projects\CreateProjectRequest;
 use App\Http\Requests\API\Projects\SearchProjectsRequest;
 use App\Http\Requests\API\Projects\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ProjectsController extends BaseController
@@ -74,5 +76,37 @@ class ProjectsController extends BaseController
     }
 
     return $this->returnSuccess(compact('project'));
+  }
+
+  public function addTag(Project $project, AddTagRequest $request)
+  {
+    $user = $request->user();
+    if ($user->cannot('update', $project)) {
+      return $this->returnError('You can not update this project.', 403);
+    }
+
+    $tag = Tag::query()->name($request->input('name'))->first() ?? Tag::create($request->all());
+
+    if ($project->tags()->where('tag_id', $tag->id)->count() == 0) {
+      $project->tags()->attach($tag);
+    }
+
+    return $this->returnSuccess(['tags' => $project->tags()->get()]);
+  }
+
+  public function removeTag(Project $project, string $name)
+  {
+    $user = auth()->user();
+    if ($user->cannot('update', $project)) {
+      return $this->returnError('You can not update this project.', 403);
+    }
+
+    $tag = Tag::query()->name($name)->first();
+
+    if ($tag) {
+      $project->tags()->detach($tag);
+    }
+
+    return $this->returnSuccess(['tags' => $project->tags()->get()]);
   }
 }

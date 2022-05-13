@@ -21,55 +21,61 @@ class UsersController extends BaseController
     $this->user = $user;
   }
 
-  public function create(CreateUserRequest $request) {
-      $params = array_merge($request->all(), ['password' => Hash::make($request->input('password'))]);
-      $user = User::create($params);
+  public function create(CreateUserRequest $request)
+  {
+    $params = array_merge($request->all(), ['password' => Hash::make($request->input('password'))]);
+    $user = User::create($params);
 
-      return $this->returnSuccess(compact('user'));
+    return $this->returnSuccess(compact('user'));
+  }
+
+  public function update(User $user, UpdateUserRequest $request)
+  {
+    if ($user->isAdmin && $user->id != auth()->id()) {
+      return $this->returnError("You cann't update admin's information.", 403);
     }
 
-    public function update(User $user, UpdateUserRequest $request) {
-      if ($user->isAdmin && $user->id != auth()->id()) {
-        return $this->returnError("You cann't update admin's information.", 403);
-      }
+    $params = array_merge($request->all(), $request->input('password') ? ['password' => Hash::make($request->input('password'))] : []);
+    $user->update($params);
 
-      $params = array_merge($request->all(), $request->input('password') ? ['password' => Hash::make($request->input('password'))] : []);
-      $user->update($params);
+    return $user;
+  }
 
-      return $user;
+  public function delete(User $user)
+  {
+    if (!Gate::check('manage-users')) {
+      return $this->returnError("You are not allowed.", 403);
     }
 
-    public function delete(User $user) {
-      if (!Gate::check('manage-users')) {
-        return $this->returnError("You are not allowed.", 403);
-      }
+    $status = $user->delete();
 
-      $status = $user->delete();
+    return $this->returnSuccess($status);
+  }
 
-      return $this->returnSuccess($status);
+  public function get(User $user)
+  {
+    if (!Gate::check('manage-users')) {
+      return $this->returnError("You are not allowed.", 403);
     }
 
-    public function get(User $user) {
-      if (!Gate::check('manage-users')) {
-        return $this->returnError("You are not allowed.", 403);
-      }
+    return $this->returnSuccess(compact('user'));
+  }
 
-      return $this->returnSuccess(compact('user'));
+  public function index()
+  {
+    if (!Gate::check('manage-users')) {
+      return $this->returnError("You are not allowed.", 403);
     }
 
-    public function index() {
-      if (!Gate::check('manage-users')) {
-        return $this->returnError("You are not allowed.", 403);
-      }
+    return $this->returnSuccess(['users' => $this->user::query()->paginate(10)]);
+  }
 
-      return $this->returnSuccess(['users' => $this->user::query()->paginate(10)]);
+  public function projects(User $user)
+  {
+    if (!Gate::check('manage-users')) {
+      return $this->returnError("You are not allowed.", 403);
     }
 
-    public function projects(User $user) {
-      if (!Gate::check('manage-users')) {
-        return $this->returnError("You are not allowed.", 403);
-      }
-
-      return $this->returnSuccess(['projects' => $user->projects()]);
+    return $this->returnSuccess(['projects' => $user->projects()]);
   }
 }

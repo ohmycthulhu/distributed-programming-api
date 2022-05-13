@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth:api'], function (Router $router) {
     Route::get('/{project}', [ProjectsController::class, 'get']);
     Route::put('/{project}', [ProjectsController::class, 'update']);
     Route::delete('/{project}', [ProjectsController::class, 'delete']);
+
+    Route::post('/{project}/tags', [ProjectsController::class, 'addTag']);
+    Route::delete('/{project}/tags/{name}', [ProjectsController::class, 'removeTag']);
   });
 });
 

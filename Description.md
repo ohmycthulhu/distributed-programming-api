@@ -1,4 +1,5 @@
 ## Users resource
+
 Path | Method | Payload | Description
 --|--|--|--
 /users | GET | - | To get list of users (only administors)
@@ -9,6 +10,7 @@ Path | Method | Payload | Description
 
 
 ## User part
+
 Path | Method | Payload | Description
 --|--|--|--
 /user | POST | {email, password} | To login
