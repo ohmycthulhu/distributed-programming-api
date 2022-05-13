@@ -24,6 +24,10 @@ class ProjectsController extends BaseController
   {
     $query = $this->project::query();
 
+    if (!$request->user()->admin) {
+      $query->public();
+    }
+
     if ($request->input('userId')) {
       $query->where('user_id', $request->input('userId'));
     }
