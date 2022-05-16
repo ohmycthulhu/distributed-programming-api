@@ -1,0 +1,13 @@
+{
+  "name": "clients",
+  "version": "1.0.0",
+  "main": "user_management.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "scripts": {
+    "search": "node search.js",
+    "user": "node user_management.js"
+  }
+}

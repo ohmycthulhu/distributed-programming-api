@@ -76,6 +76,6 @@ class UsersController extends BaseController
       return $this->returnError("You are not allowed.", 403);
     }
 
-    return $this->returnSuccess(['projects' => $user->projects()]);
+    return $this->returnSuccess(['projects' => $user->projects]);
   }
 }

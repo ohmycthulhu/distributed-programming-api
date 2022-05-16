@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8000",
+  "user": {
+    "email": "admin@email.com",
+    "password": "password"
+  },
+  "admin": {
+    "email": "admin@email.com",
+    "password": "password"
+  }
+}
